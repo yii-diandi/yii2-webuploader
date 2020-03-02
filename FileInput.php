@@ -3,7 +3,7 @@
  * @Author: Wang Chunsheng 2192138785@qq.com
  * @Date:   2020-03-02 10:29:02
  * @Last Modified by:   Wang Chunsheng 2192138785@qq.com
- * @Last Modified time: 2020-03-02 10:30:05
+ * @Last Modified time: 2020-03-02 19:10:02
  */
  
 
@@ -24,7 +24,8 @@ class FileInput extends InputWidget
     private $_hashVar;
     private $_encOptions;
     private $_config;
-
+    private $_field;
+    
     public function init ()
     {
         parent::init();
@@ -185,9 +186,14 @@ JS;
     {
         $src = Yii::$app->params['webuploader']['baseConfig']['defaultImage'];
         $eles = [];
+        if(!empty($this->options['field'])){
+            $attribute = $this->options['field'];
+        }
+
         if (($value = $model->$attribute)) {
             $src = $this->_validateUrl($value) ? $value : Yii::$app->params['domain'] . $value;
         }
+       
         $eles[] = Html::img($src, ['class' => 'img-responsive img-thumbnail cus-img']);
         $eles[] = Html::tag('em', 'x', ['class' => 'close delImage', 'title' => '删除这张图片']);
 
