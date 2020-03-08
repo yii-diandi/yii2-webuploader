@@ -3,7 +3,7 @@
  * @Author: Wang Chunsheng 2192138785@qq.com
  * @Date:   2020-03-02 10:29:02
  * @Last Modified by:   Wang Chunsheng 2192138785@qq.com
- * @Last Modified time: 2020-03-02 19:10:02
+ * @Last Modified time: 2020-03-03 08:06:18
  */
  
 
@@ -190,8 +190,13 @@ JS;
             $attribute = $this->options['field'];
         }
 
-        if (($value = $model->$attribute)) {
+        if (($value = $model->$attribute) && empty($this->options['value'])) {
             $src = $this->_validateUrl($value) ? $value : Yii::$app->params['domain'] . $value;
+        }
+
+
+        if(!empty($this->options['value'])){
+            $src = $this->options['value'];
         }
        
         $eles[] = Html::img($src, ['class' => 'img-responsive img-thumbnail cus-img']);
@@ -235,6 +240,9 @@ JS;
         $pattern = '/^{schemes}:\/\/(([A-Z0-9][A-Z0-9_-]*)(\.[A-Z0-9][A-Z0-9_-]*)+)(?::\d{1,5})?(?:$|[?\/#])/i';
         $validSchemes = ['http', 'https'];
         $pattern = str_replace('{schemes}', '(' . implode('|', $validSchemes) . ')', $pattern);
+        if(!is_string($value)){
+            return false;
+        }
         if (!preg_match($pattern, $value)) {
             return false;
         }
