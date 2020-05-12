@@ -2,8 +2,8 @@
 /**
  * @Author: Wang Chunsheng 2192138785@qq.com
  * @Date:   2020-03-02 10:29:02
- * @Last Modified by:   Wang Chunsheng 2192138785@qq.com
- * @Last Modified time: 2020-03-03 08:06:18
+ * @Last Modified by:   Wang chunsheng  email:2192138785@qq.com
+ * @Last Modified time: 2020-05-12 13:53:28
  */
  
 
@@ -186,11 +186,23 @@ JS;
     {
         $src = Yii::$app->params['webuploader']['baseConfig']['defaultImage'];
         $eles = [];
+        $value = '';
         if(!empty($this->options['field'])){
             $attribute = $this->options['field'];
         }
-
-        if (($value = $model->$attribute) && empty($this->options['value'])) {
+        
+        if(stristr($attribute,'[') !==false){
+            // 二维数组的支持
+            $str = stristr($attribute,'[');
+            $k = str_replace(stristr($str,'['),'',$attribute);
+            $attr = trim(rtrim($str,']'),'[');
+            
+            $value = $model->$k[$attr];
+        }else{
+            $value = $model->$attribute;
+        }
+        
+        if ($value && empty($this->options['value'])) {
             $src = $this->_validateUrl($value) ? $value : Yii::$app->params['domain'] . $value;
         }
 
@@ -213,7 +225,17 @@ JS;
         /**
          * @var $srcTmp like this: src1,src2...srcxxx
          */
-        $srcTmp = $model->$attribute;
+        if(stristr($attribute,'[') !==false){
+            // 二维数组的支持
+            $str = stristr($attribute,'[');
+            $k = str_replace(stristr($str,'['),'',$attribute);
+            $attr = trim(rtrim($str,']'),'[');
+            
+            $srcTmp = $model->$k[$attr];
+        }else{
+            $srcTmp = $model->$attribute;
+        }
+        
         $items = [];
         if ($srcTmp) {
             is_string($srcTmp) && $srcTmp = explode(Yii::$app->params['webuploader']['delimiter'], $srcTmp);
